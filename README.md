@@ -1,17 +1,27 @@
 # Ligo — Connect. Trade. Celebrate.
 
-A global fan economy platform. Communities connect, trade merchandise, and support each other with borderless USDT payments. Football first; crypto stays in the background.
+A **community-first** fan platform. The community is the core entity; commerce, payments, and blockchain sit underneath it. Fans join communities to connect, participate, and celebrate — then trade and support each other with borderless USDT. Football first; crypto stays in the background.
 
 **Hackathon MVP** — Next.js 16 + Tailwind + shadcn/ui frontend, wagmi/RainbowKit wallet flow, and a MockUSDT ERC-20 with a public faucet on **Base Sepolia** so anyone can demo real on-chain checkout with test funds.
 
 ## Features
 
 - **Landing** — hero, how it works, communities, marketplace, benefits, roadmap, FAQ
-- **Communities** — browse, search, join/leave (Indonesia, Brazil, Argentina, Man Utd, Barça, Japan)
-- **Marketplace** — jerseys, scarves, signed items, tickets, stickers; search + category filters; sell form
+- **Communities** — browse, search, join/leave (Indonesia, Brazil, Argentina, Man Utd, Barça, Japan). Each community is a tabbed hub with a live overview (members, online now, upcoming events, new posts):
+  - **Feed** — seeded posts + a composer; like and comment (persisted locally)
+  - **Events** — watch parties, meetups, online rooms; RSVP with live attendee counts
+  - **Polls** — Man of the Match / predictions; vote to reveal live result bars
+  - **Challenges** — daily quest, trivia, invite, participation, photo — each worth reputation points
+  - **Members** — admins/moderators and members
+  - **Marketplace** — the community's own listings (preview of the nested marketplace)
+- **Marketplace (global)** — browse all listings, filters, product detail, sell form. Also nested inside each community.
 - **Checkout** — connect wallet (RainbowKit), enforce Base Sepolia, in-app test-USDT faucet, real ERC-20 `transfer` to the seller, BaseScan receipt
-- **Profile** — joined communities, own listings, purchase history with tx links, reputation
+- **Profile** — reputation (derived from participation: posts, comments, RSVPs, poll votes, challenges, joins, purchases), joined communities, own listings, purchase history with tx links
 - **Settings** — display name, light/dark mode
+
+## Community-first architecture
+
+The community is the product; everything else is a feature *inside* it. Post-MVP extensions (treasury, charity, creator support, USDT rewards) are designed to live inside a community too — see the in-app Roadmap. Feed/events/polls/challenges content is seeded per community (so nothing feels empty) and merged with user-created content via the store.
 
 ## Quick start
 

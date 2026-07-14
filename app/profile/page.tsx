@@ -12,19 +12,17 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { CommunityCard } from "@/components/community-card";
 import { ListingCard } from "@/components/listing-card";
 import { getCommunities } from "@/lib/data/repository";
-import { useLigoStore } from "@/lib/store";
+import { useShallow } from "zustand/react/shallow";
+import {
+  reputationTier,
+  selectReputation,
+  useLigoStore,
+} from "@/lib/store";
 import { useMounted } from "@/lib/use-mounted";
 import { formatUsdt, shortenAddress, timeAgo } from "@/lib/format";
 
 const explorerTxUrl = (hash: string) =>
   `https://sepolia.basescan.org/tx/${hash}`;
-
-function reputationLabel(orderCount: number): string {
-  if (orderCount >= 5) return "Trusted fan";
-  if (orderCount >= 2) return "Active trader";
-  if (orderCount >= 1) return "First purchase";
-  return "New here";
-}
 
 export default function ProfilePage() {
   const mounted = useMounted();
@@ -35,6 +33,7 @@ export default function ProfilePage() {
   const userListings = useLigoStore((s) => s.userListings);
   const orders = useLigoStore((s) => s.orders);
   const displayName = useLigoStore((s) => s.displayName);
+  const reputation = useLigoStore(useShallow(selectReputation));
 
   if (!mounted) {
     return (
@@ -66,7 +65,10 @@ export default function ProfilePage() {
               <h1 className="text-2xl font-semibold tracking-tight">{name}</h1>
               <Badge variant="secondary" className="gap-1">
                 <Medal className="size-3" aria-hidden />
-                {reputationLabel(orders.length)}
+                {reputationTier(reputation.points)}
+              </Badge>
+              <Badge variant="outline" className="gap-1 font-mono tabular-nums">
+                {reputation.points} pts
               </Badge>
             </div>
             {address ? (
@@ -105,6 +107,34 @@ export default function ProfilePage() {
             <p className="text-xs text-muted-foreground">{stat.label}</p>
           </div>
         ))}
+      </div>
+
+      {/* Community activity — what reputation is built from */}
+      <div className="mt-4 rounded-xl border border-border bg-card p-4">
+        <div className="flex items-center justify-between">
+          <p className="text-sm font-medium">Community activity</p>
+          <p className="text-xs text-muted-foreground">
+            {reputationTier(reputation.points)} ·{" "}
+            <span className="font-mono tabular-nums">{reputation.points}</span>{" "}
+            pts
+          </p>
+        </div>
+        <dl className="mt-4 grid grid-cols-3 gap-3 sm:grid-cols-5">
+          {[
+            { label: "Posts", value: reputation.posts },
+            { label: "Comments", value: reputation.comments },
+            { label: "RSVPs", value: reputation.rsvps },
+            { label: "Poll votes", value: reputation.votes },
+            { label: "Challenges", value: reputation.challenges },
+          ].map((s) => (
+            <div key={s.label}>
+              <dd className="font-mono text-lg font-semibold tabular-nums">
+                {s.value}
+              </dd>
+              <dt className="text-xs text-muted-foreground">{s.label}</dt>
+            </div>
+          ))}
+        </dl>
       </div>
 
       <Separator className="my-10" />

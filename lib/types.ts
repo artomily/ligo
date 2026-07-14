@@ -57,3 +57,70 @@ export interface Order {
 export interface UserProfile {
   displayName: string;
 }
+
+export interface Post {
+  id: string;
+  communitySlug: string;
+  authorName: string;
+  authorAddress: `0x${string}`;
+  body: string;
+  imageUrl?: string;
+  createdAt: string;
+  seedLikes: number;
+  seedComments: Comment[];
+}
+
+export interface Comment {
+  id: string;
+  authorName: string;
+  body: string;
+  createdAt: string;
+}
+
+export type EventKind =
+  | "watch-party"
+  | "meetup"
+  | "online"
+  | "gathering";
+
+export interface CommunityEvent {
+  id: string;
+  communitySlug: string;
+  kind: EventKind;
+  title: string;
+  description: string;
+  location: string;
+  startsAt: string;
+  seedAttendees: number;
+  host: string;
+}
+
+export interface PollOption {
+  id: string;
+  label: string;
+  seedVotes: number;
+}
+
+export interface Poll {
+  id: string;
+  communitySlug: string;
+  question: string;
+  options: PollOption[];
+  createdAt: string;
+}
+
+export type ChallengeKind =
+  | "daily-quest"
+  | "trivia"
+  | "invite"
+  | "participation"
+  | "photo";
+
+export interface Challenge {
+  id: string;
+  communitySlug: string;
+  kind: ChallengeKind;
+  title: string;
+  description: string;
+  points: number;
+}

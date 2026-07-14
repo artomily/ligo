@@ -1,20 +1,23 @@
 "use client";
 
 import { use } from "react";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CalendarDays, MapPin, Users } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { ListingCard } from "@/components/listing-card";
-import { getCommunity, getMembers } from "@/lib/data/repository";
-import { useListings } from "@/lib/data/hooks";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { getCommunity } from "@/lib/data/repository";
+import { seedEventsFor, seedPostsFor } from "@/lib/data/community-content";
 import { useLigoStore } from "@/lib/store";
 import { useMounted } from "@/lib/use-mounted";
-import { formatCompactNumber, shortenAddress } from "@/lib/format";
+import { formatCompactNumber } from "@/lib/format";
 import { toast } from "sonner";
+import { FeedTab } from "@/components/community/feed-tab";
+import { EventsTab } from "@/components/community/events-tab";
+import { PollsTab } from "@/components/community/polls-tab";
+import { ChallengesTab } from "@/components/community/challenges-tab";
+import { MembersTab } from "@/components/community/members-tab";
+import { MarketplaceTab } from "@/components/community/marketplace-tab";
 
 export default function CommunityDetailPage({
   params,
@@ -23,8 +26,6 @@ export default function CommunityDetailPage({
 }) {
   const { slug } = use(params);
   const community = getCommunity(slug);
-  const members = getMembers(slug);
-  const listings = useListings(slug);
   const mounted = useMounted();
 
   const joined = useLigoStore((s) => s.joinedCommunities.includes(slug));
@@ -34,6 +35,28 @@ export default function CommunityDetailPage({
   if (!community) notFound();
 
   const isJoined = mounted && joined;
+  const memberCount = community.memberCount + (isJoined ? 1 : 0);
+  const onlineNow = Math.max(
+    12,
+    Math.round(community.memberCount * 0.012)
+  );
+  const upcomingEvents = seedEventsFor(slug).length;
+  const postsToday = seedPostsFor(slug).length;
+
+  const overview = [
+    {
+      label: "Members",
+      value: formatCompactNumber(memberCount),
+      icon: Users,
+    },
+    { label: "Online now", value: formatCompactNumber(onlineNow), online: true },
+    {
+      label: "Upcoming events",
+      value: String(upcomingEvents),
+      icon: CalendarDays,
+    },
+    { label: "New posts", value: String(postsToday) },
+  ];
 
   return (
     <div>
@@ -44,7 +67,7 @@ export default function CommunityDetailPage({
           background: `linear-gradient(135deg, color-mix(in oklch, ${community.accentColor} 10%, var(--background)) 0%, var(--background) 70%)`,
         }}
       >
-        <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
+        <div className="mx-auto max-w-5xl px-4 py-10 sm:px-6 sm:py-12">
           <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
             <div className="flex items-start gap-4">
               <span
@@ -66,15 +89,6 @@ export default function CommunityDetailPage({
                   {community.tagline}
                 </p>
                 <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted-foreground">
-                  <span className="flex items-center gap-1.5">
-                    <Users className="size-3.5" aria-hidden />
-                    <span className="font-mono tabular-nums">
-                      {formatCompactNumber(
-                        community.memberCount + (isJoined ? 1 : 0)
-                      )}
-                    </span>
-                    members
-                  </span>
                   <span className="flex items-center gap-1.5">
                     <MapPin className="size-3.5" aria-hidden />
                     {community.location}
@@ -103,92 +117,79 @@ export default function CommunityDetailPage({
               {isJoined ? "Joined ✓" : "Join community"}
             </Button>
           </div>
+
+          {/* Live overview — keeps the community feeling alive */}
+          <dl className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
+            {overview.map((stat) => (
+              <div
+                key={stat.label}
+                className="rounded-xl border border-border bg-card px-4 py-3"
+              >
+                <dt className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                  {"online" in stat && stat.online ? (
+                    <span
+                      className="size-2 rounded-full bg-emerald-500"
+                      aria-hidden
+                    />
+                  ) : "icon" in stat && stat.icon ? (
+                    <stat.icon className="size-3.5" aria-hidden />
+                  ) : null}
+                  {stat.label}
+                </dt>
+                <dd className="mt-1 font-mono text-lg font-semibold tabular-nums">
+                  {stat.value}
+                </dd>
+              </div>
+            ))}
+          </dl>
         </div>
       </section>
 
-      <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
-        <div className="grid gap-10 lg:grid-cols-[1fr_280px]">
-          <div>
-            <h2 className="text-lg font-semibold">About</h2>
-            <p className="mt-2 max-w-2xl text-sm leading-7 text-muted-foreground">
-              {community.description}
-            </p>
+      {/* Tabs */}
+      <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6">
+        <Tabs defaultValue="feed">
+          <TabsList className="flex w-full justify-start overflow-x-auto">
+            <TabsTrigger value="feed">Feed</TabsTrigger>
+            <TabsTrigger value="events">Events</TabsTrigger>
+            <TabsTrigger value="polls">Polls</TabsTrigger>
+            <TabsTrigger value="challenges">Challenges</TabsTrigger>
+            <TabsTrigger value="members">Members</TabsTrigger>
+            <TabsTrigger value="marketplace">Marketplace</TabsTrigger>
+          </TabsList>
 
-            <Separator className="my-8" />
-
-            <div className="flex items-end justify-between gap-4">
-              <h2 className="text-lg font-semibold">
-                Marketplace
-                <span className="ml-2 font-mono text-sm font-normal text-muted-foreground tabular-nums">
-                  {listings.length}
-                </span>
-              </h2>
-              <Button asChild variant="ghost" size="sm">
-                <Link href="/sell">Sell an item</Link>
-              </Button>
+          <div className="mt-6 grid gap-8 lg:grid-cols-[1fr_260px]">
+            <div className="min-w-0">
+              <TabsContent value="feed">
+                <FeedTab communitySlug={slug} />
+              </TabsContent>
+              <TabsContent value="events">
+                <EventsTab communitySlug={slug} />
+              </TabsContent>
+              <TabsContent value="polls">
+                <PollsTab communitySlug={slug} />
+              </TabsContent>
+              <TabsContent value="challenges">
+                <ChallengesTab communitySlug={slug} />
+              </TabsContent>
+              <TabsContent value="members">
+                <MembersTab communitySlug={slug} />
+              </TabsContent>
+              <TabsContent value="marketplace">
+                <MarketplaceTab communitySlug={slug} />
+              </TabsContent>
             </div>
-            {listings.length === 0 ? (
-              <div className="mt-6 rounded-xl border border-dashed border-border p-10 text-center">
-                <p className="text-sm font-medium">Nothing listed yet</p>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  Be the first to list a jersey, scarf, or ticket here.
-                </p>
-                <Button asChild size="sm" className="mt-4">
-                  <Link href="/sell">List an item</Link>
-                </Button>
-              </div>
-            ) : (
-              <div className="mt-4 grid grid-cols-2 gap-4 lg:grid-cols-3">
-                {listings.map((l) => (
-                  <ListingCard key={l.id} listing={l} />
-                ))}
-              </div>
-            )}
-          </div>
 
-          <aside aria-label="Members">
-            <h2 className="text-lg font-semibold">Members</h2>
-            <ul className="mt-4 space-y-3">
-              {members.map((m) => (
-                <li key={m.address} className="flex items-center gap-3">
-                  <Avatar className="size-9">
-                    <AvatarFallback className="bg-primary/10 text-xs font-semibold text-primary">
-                      {m.name.slice(0, 2).toUpperCase()}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="min-w-0">
-                    <p className="truncate text-sm font-medium">
-                      {m.name}
-                      {m.role === "organizer" && (
-                        <Badge variant="secondary" className="ml-2">
-                          Organizer
-                        </Badge>
-                      )}
-                    </p>
-                    <p className="font-mono text-xs text-muted-foreground">
-                      {shortenAddress(m.address)}
-                    </p>
-                  </div>
-                </li>
-              ))}
-              {isJoined && (
-                <li className="flex items-center gap-3">
-                  <Avatar className="size-9">
-                    <AvatarFallback className="bg-primary text-xs font-semibold text-primary-foreground">
-                      YOU
-                    </AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <p className="text-sm font-medium">You</p>
-                    <p className="text-xs text-muted-foreground">
-                      Joined just now
-                    </p>
-                  </div>
-                </li>
-              )}
-            </ul>
-          </aside>
-        </div>
+            {/* About sidebar */}
+            <aside className="order-first lg:order-last">
+              <div className="rounded-xl border border-border bg-card p-5">
+                <h2 className="text-sm font-semibold">About</h2>
+                <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                  {community.description}
+                </p>
+              </div>
+            </aside>
+          </div>
+        </Tabs>
       </div>
     </div>
   );
