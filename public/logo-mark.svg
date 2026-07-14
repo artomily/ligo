@@ -1,0 +1,32 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Ligo">
+  <defs>
+    <linearGradient id="ligo-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2063B0"/>
+      <stop offset="1" stop-color="#6359B5"/>
+    </linearGradient>
+    <linearGradient id="ligo-glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.20"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+    </linearGradient>
+    <clipPath id="ligo-clip">
+      <rect x="0" y="0" width="200" height="200" rx="44"/>
+    </clipPath>
+  </defs>
+
+  <rect x="0" y="0" width="200" height="200" rx="44" fill="url(#ligo-bg)"/>
+
+  <g clip-path="url(#ligo-clip)">
+    <ellipse cx="100" cy="46" rx="120" ry="52" fill="url(#ligo-glass)"/>
+    <!-- meridian: a single connecting arc behind the mark — borderless / global -->
+    <path d="M34 138 A 92 92 0 0 1 158 56" fill="none" stroke="#FFFFFF" stroke-opacity="0.22"
+          stroke-width="4" stroke-linecap="round"/>
+  </g>
+
+  <!-- "L" monogram -->
+  <path d="M76 58 L76 138 L128 138" fill="none" stroke="#F5F7FA" stroke-width="20"
+        stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- connection node: the arc's far end, and a nod to the ball/community -->
+  <circle cx="146" cy="70" r="12" fill="#6492CB"/>
+  <circle cx="141.5" cy="65.5" r="3.5" fill="#FFFFFF" fill-opacity="0.85"/>
+</svg>

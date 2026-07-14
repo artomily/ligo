@@ -4,7 +4,6 @@
 
 Ligo is a **community-first** global fan platform. Fans join a community (a national team or club) to connect, post, vote, RSVP to watch parties, and complete challenges — then trade merchandise and support each other with borderless USDT. Football first; crypto stays in the background so it feels like Discord + Reddit + a marketplace, not a DeFi app.
 
-> 🏆 **Built for [Hackathon Name](https://dorahacks.io/hackathon/REPLACE_ME)** — Track: _fill in_.
 > Sponsor / chain capability: **USDT on Base Sepolia** (EVM). See [`submission/DORAHACKS.md`](submission/DORAHACKS.md) for the full write-up.
 
 ![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=next.js)

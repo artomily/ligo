@@ -1,0 +1,6 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Ligo">
+  <rect x="0" y="0" width="200" height="200" rx="44" fill="#2063B0"/>
+  <path d="M76 58 L76 138 L128 138" fill="none" stroke="#F5F7FA" stroke-width="22"
+        stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="146" cy="70" r="13" fill="#6492CB"/>
+</svg>
