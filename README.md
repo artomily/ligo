@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="public/logo-lockup.svg" alt="Ligo — Connect. Trade. Celebrate." width="420" />
+</p>
+
 # Ligo — Connect. Trade. Celebrate.
 
 **The community is the product. Commerce, payments, and blockchain are just how it moves.**

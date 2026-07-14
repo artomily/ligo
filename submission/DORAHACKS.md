@@ -20,7 +20,11 @@ Ligo
 
 ## Logo
 
-`public/*.svg` — see `public/` for the current icon set. *(Export a square mark + wordmark lockup before submitting if DoraHacks requires a raster upload.)*
+- `public/logo-mark.svg` / `public/logo-mark.png` (512×512) — icon only, square, works on light or dark backgrounds.
+- `public/logo-lockup.svg` / `public/logo-lockup.png` (1120×400) — icon + wordmark + tagline, for banners/headers.
+- App favicon: `app/icon.svg` (modern browsers), `app/favicon.ico` (16/32/48px), `app/apple-icon.png` (180px, iOS).
+
+DoraHacks requires a raster upload (PNG/JPG) — use `logo-mark.png` for the project icon.
 
 ## Project Description
 

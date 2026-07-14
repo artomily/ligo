@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Menu } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -32,9 +33,14 @@ export function SiteHeader() {
           href="/"
           className="flex items-center gap-2 rounded-md text-lg font-bold tracking-tight focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
         >
-          <span className="flex size-7 items-center justify-center rounded-lg bg-primary text-sm font-extrabold text-primary-foreground">
-            L
-          </span>
+          <Image
+            src="/logo-mark.svg"
+            alt=""
+            width={28}
+            height={28}
+            className="size-7 rounded-lg"
+            priority
+          />
           Ligo
         </Link>
 

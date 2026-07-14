@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 const footerLinks = [
   { href: "/communities", label: "Communities" },
@@ -13,9 +14,13 @@ export function SiteFooter() {
       <div className="mx-auto flex max-w-6xl flex-col gap-6 px-4 py-10 sm:flex-row sm:items-center sm:justify-between sm:px-6">
         <div>
           <p className="flex items-center gap-2 text-sm font-bold">
-            <span className="flex size-6 items-center justify-center rounded-md bg-primary text-xs font-extrabold text-primary-foreground">
-              L
-            </span>
+            <Image
+              src="/logo-mark.svg"
+              alt=""
+              width={24}
+              height={24}
+              className="size-6 rounded-md"
+            />
             Ligo
           </p>
           <p className="mt-2 max-w-sm text-xs leading-5 text-muted-foreground">
